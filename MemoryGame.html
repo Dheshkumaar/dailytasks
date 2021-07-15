@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body{
+            background-color: blanchedalmond;
+            text-align: center;
+        }
+        div{
+            height: 450px;
+            width:700px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin: 5px;
+        }
+        .center {
+            margin: auto;
+            width: 60%;
+            border: 5px double black;
+            padding: 10px;
+        }
+        button{
+            height: 110px;
+            margin: 1px;
+            background-color: black;
+            font-size: 30px;
+            border-radius: 5%;
+        }
+        #win{
+            font-size: 50px;
+            color: royalblue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Game</h1>
+    <div class="center">
+        <button data-turnable="true" data-number="1" id="1"></button>
+        <button data-turnable="true" data-number="8" id="2"></button>
+        <button data-turnable="true" data-number="2" id="3"></button>
+        <button data-turnable="true" data-number="3" id="4"></button>
+        <button data-turnable="true" data-number="7" id="5"></button>
+        <button data-turnable="true" data-number="5" id="6"></button>
+        <button data-turnable="true" data-number="6" id="7"></button>
+        <button data-turnable="true" data-number="4" id="8"></button>
+        <button data-turnable="true" data-number="8" id="9"></button>
+        <button data-turnable="true" data-number="4" id="10"></button>
+        <button data-turnable="true" data-number="5" id="11"></button>
+        <button data-turnable="true" data-number="1" id="12"></button>
+        <button data-turnable="true" data-number="3" id="13"></button>
+        <button data-turnable="true" data-number="7" id="14"></button>
+        <button data-turnable="true" data-number="2" id="15"></button>
+        <button data-turnable="true" data-number="6" id="16"></button>
+    </div>
+    <h1 id="win"></h1>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var lastKnownButtonId = undefined;
+    var lastKnownButtonNumber = undefined;
+    var matches = 0;
+    var wait = false;
+    $(document).ready(function(){
+        $('button').on("click",function(e){
+            var turnable = $(this).attr("data-turnable");
+            if(!wait && lastKnownButtonId == undefined && lastKnownButtonNumber == undefined && turnable == 'true')
+            {
+                e.target.dataset.turnable = 'false';
+                e.target.textContent = e.target.dataset.number;
+                e.target.style.backgroundColor = 'blue';
+                lastKnownButtonId = e.target.id;
+                lastKnownButtonNumber = e.target.dataset.number;
+            }
+            else if(!wait && lastKnownButtonId != undefined && lastKnownButtonNumber != undefined && turnable == 'true'&& e.target.id != lastKnownButtonId)
+            {
+                e.target.dataset.turnable = 'false';
+                e.target.textContent = e.target.dataset.number;
+                if(e.target.dataset.number == lastKnownButtonNumber )
+                {
+                    e.target.style.backgroundColor = 'green';
+                    $("#"+lastKnownButtonId).css("backgroundColor","green");
+                    lastKnownButtonId = undefined;
+                    lastKnownButtonNumber = undefined;
+                    matches++;
+                    if(matches == 8){
+                        showWinScreen();
+                    }
+                }
+                else{
+                    $("#"+lastKnownButtonId).css("backgroundColor","black");
+                    e.target.style.backgroundColor = 'black';
+                    wait = true;
+                    setTimeout(()=>{
+                        e.target.dataset.turnable = 'true';
+                        e.target.textContent = "";
+                        $("#"+lastKnownButtonId).attr("data-turnable","true");    
+                        $("#"+lastKnownButtonId).textContent="";
+                        lastKnownButtonId = undefined;
+                        lastKnownButtonNumber = undefined;
+                        wait = false;
+                    },100);
+                }   
+            }            
+        })
+    })
+    function showWinScreen(){
+        $("#win").html('You Win');
+    }
+    
+</script>
+</html>

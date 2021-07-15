@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label">First Name</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="Firstname" placeholder="First Name">
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label">Last Name</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="Lastname" placeholder="Last Name">
+    </div>
+</div>
+<fieldset class="form-group">
+    <div class="row">
+        <label class="col-form-label col-sm-2 pt-0">Gender</label>
+        <div class="col-sm-10">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="g-Male" value="Male">
+                <label class="form-check-label">Male</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="g-Female" value="Female">
+                <label class="form-check-label" for="gridRadios2">Female</label>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">E mail</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" id="Email" placeholder="Email">
+            <span id="error"></span>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-2">Skills</div>
+    <div class="col-sm-10">
+        <div class="form-check">
+            <input class="form-check-input skillset" type="checkbox" id="C#" value="C#">
+            <label class="form-check-label">C#</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input skillset" type="checkbox" id="Python" value="Python">
+            <label class="form-check-label">Python</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input skillset" type="checkbox" id="AWS" value="AWS">
+            <label class="form-check-label">AWS</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input skillset" type="checkbox" id="NodeJS" value="NodeJS">
+            <label class="form-check-label">Nodejs</label>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-sm-12">
+        <input type="submit" value="submit" class="form-control" onclick="save()">
+    </div>
+</div>
+<div>
+    <table class="table table-bordered table-striped table-hover" hidden>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Skills</th>
+        </tr>
+        <tr>
+            <td id="dataFname"></td>
+            <td id="dataLname"></td>
+            <td id="dataGender"></td>
+            <td id="dataEmail"></td>
+            <td id="dataskills"></td>
+        </tr>
+    </table>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    function save() {
+        var selectedSkills = [];
+        $(".skillset:checked").each(function (item) {
+            selectedSkills.push(this.value + " ");
+        });
+        var obj = {
+            FirstName: $("#Firstname").val(),
+            LastName: $("#Lastname").val(),
+            Gender: $("input[name='gender']:checked").val(),
+            Email: $("#Email").val(),
+            Skills: selectedSkills,
+        };
+        $.ajax({
+            type: "POST",
+            url: "home/SaveEmpInfo",
+            data: obj,
+            dataType: 'json',
+            success: function (resp) {
+                var FirstName = resp.firstName;
+                var LastName = resp.lastName;
+                var Gender = resp.gender;
+                var Email = resp.email;
+                var Skills = resp.skills;
+                if (Email == undefined) {
+                    $("table").attr("hidden", true);
+                    $("#error").html("Entered email not available in the database");
+                    $("#error").css("color", "red");
+                }
+                else {
+                    $("#error").html("");
+                    add(FirstName, LastName, Gender, Email, Skills);
+                }
+            },
+            error: function (resp) {
+                alert("Some Error in Database");
+            }
+        });
+    }
+    function add(FirstName, LastName, Gender, Email, Skills) {
+        $("table").removeAttr("hidden");
+        $("#dataFname").html(FirstName);
+        $("#dataLname").html(LastName);
+        $("#dataGender").html(Gender);
+        $("#dataEmail").html(Email);
+        $("#dataskills").html(Skills);
+    }
+</script>
