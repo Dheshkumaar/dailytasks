@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div>
+    <h1>Employee Details</h1>
+    <div id="grid"></div>
+</div>
+
+<style>
+    .k-grid-search {
+        margin-left: auto;
+        margin-right: 0;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $("#grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: '/Home/GetEmployeeData',
+                        type: "get",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                    },
+                },
+                schema: {
+                    //data: function (result) {
+                    //    return result;
+                    //},
+                    model: {
+                        fields: {
+                            empName: { type: "string" },
+                            empSalary: { type: "decimal" },
+                            empDOB: { type: "date" },
+                            empAddress: { type: "string" },
+                            empStatus: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 10
+            },
+            height: 450,
+            toolbar: ["search"],
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            pageable: {
+                input: true,
+                numeric: false,
+            },
+            columns: [
+                { field: "empName", title: "Employee Name"},
+                { field: "empSalary", title: "Employee Salary", filterable: false },
+                { field: "empDOB", title: "Employee DOB ", format: "{0:MM/dd/yyyy}" },
+                { field: "empAddress", title: "Employee Address " },
+                { field: "empStatus", title: "Employee Status", filterable: false },
+            ]
+        });
+    });
+</script>
+

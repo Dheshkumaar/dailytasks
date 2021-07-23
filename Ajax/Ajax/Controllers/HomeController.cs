@@ -1,11 +1,7 @@
 ﻿using Ajax.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Ajax.Controllers
 {
@@ -30,29 +26,20 @@ namespace Ajax.Controllers
             email.Add("fazil@gmail.com");
             if (email.Contains(employeeModel.Email))
             {
-                return Json(new { msg = "Success", firstName = employeeModel.FirstName,
-                    lastName = employeeModel.LastName, gender = employeeModel.Gender, email = employeeModel.Email,
-                    skills=employeeModel.Skills});
+                return Json(new
+                {
+                    msg = "Success",
+                    firstName = employeeModel.FirstName,
+                    lastName = employeeModel.LastName,
+                    gender = employeeModel.Gender,
+                    email = employeeModel.Email,
+                    skills = employeeModel.Skills
+                });
             }
             else
             {
-                return Json(new { msg = "Failure"});
+                return Json(new { msg = "Failure" });
             }
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-        public JsonResult Dropdown(string drop)
-        {
-            return Json(new { msg = "success", drop = drop });
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
